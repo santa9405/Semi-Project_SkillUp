@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- 수업 목록 작성 -->
+	<entry key="slelctList">
+		SELECT
+		PAYMENT_NO,PAYMENT_DT,LESSON_NO,CTGR_CD,MEMBER_NO,PAYMENT_CK
+		FROM
+		PAYMENT
+		WHERE PAYMENT_CK='T'
+	</entry>
+
+
+	<!-- 수업조회 -->
+	<entry key="slelctClassList">
+
+		SELECT
+		LESSON_NO,LESSON_TITLE,LESSON_CONTENT,PLACE,PRICE,MAX_NUM,LESSON_DT,LESSON_CNT,LESSON_TIME,LESSON_TYPE,MEMBER_NAME
+		FROM V_LESSON
+	</entry>
+
+
+	<entry key="selectOrder">
+		SELECT LESSON_TITLE, LESSON_CONTENT, PRICE
+		,MEMBER_NAME
+		FROM V_LESSON
+		WHERE LESSON_NO =?
+	</entry>
+
+
+	<entry key="CheckOrder">
+		SELECT
+		PAYMENT_NO,PAYMENT_DT,LESSON_NO,CTGR_CD,MEMBER_NO,PAYMENT_CK
+		FROM
+		PAYMENT
+		WHERE PAYMENT_NO =?
+		AND PAYMENT_CK='T'
+	</entry>
+
+	<entry key="updatepayfl">
+		UPDATE PAYMENT SET
+		PAYMENT_CK ='F'
+		WHERE PAYMENT_NO =?
+	</entry>
+
+</properties>

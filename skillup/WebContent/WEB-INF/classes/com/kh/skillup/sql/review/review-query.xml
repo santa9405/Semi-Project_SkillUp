@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<!-- 리뷰 조회 -->
+<entry key="selectList">
+SELECT REVIEW_NO, REVIEW_CONTENT, REVIEW_DT, SCORE, REVIEW_WRITER, LESSON_TITLE, MEMBER_NAME
+FROM V_REVIEW
+WHERE INSTR = ?
+AND REVIEW_STATUS = 'Y'
+</entry>
+
+<!-- 리뷰 등록 대상자 확인 -->
+<entry key="confirm">
+SELECT COUNT(*)
+FROM SUBJECT
+JOIN LESSON USING(LESSON_NO)
+WHERE INSTR = ?
+AND MEMBER_NO = ?
+AND SUBJECT_STATUS = 'N'
+</entry>
+
+<!-- 리뷰 개수 count -->
+<entry key="selectReviewCount">
+SELECT COUNT(*)
+FROM REVIEW
+WHERE INSTR = ?
+AND REVIEW_STATUS = 'Y'
+</entry>
+
+<!-- 수강 평균 만족도 계산 -->
+<entry key="selectReviewScore">
+SELECT AVG(SCORE)
+FROM REVIEW
+WHERE INSTR = ?
+</entry>
+
+<!-- 수업 번호, 수업명 조회 -->
+<entry key="selectLessonTitle">
+SELECT SUBJECT_NO, LESSON_TITLE
+FROM SUBJECT
+JOIN LESSON USING(LESSON_NO)
+WHERE INSTR = ?
+AND MEMBER_NO = ?
+</entry>
+
+<!-- 중복 리뷰 확인 -->
+<entry key="overlap">
+SELECT COUNT(*)
+FROM REVIEW
+WHERE SUBJECT_NO = ?
+AND REVIEW_STATUS = 'Y'
+</entry>
+
+<!-- 리뷰 삽입 -->
+<entry key="insertReview">
+INSERT INTO REVIEW VALUES(SEQ_RNO.NEXTVAL, ?, DEFAULT, DEFAULT, ?, ?, ?, ?)
+</entry>
+
+<!-- 리뷰 수정 -->
+<entry key="updateReview">
+UPDATE REVIEW SET
+REVIEW_CONTENT = ?
+WHERE REVIEW_NO = ?
+</entry>
+
+<!-- 리뷰 상태 변경 -->
+<entry key="updateReviewStatus">
+UPDATE REVIEW SET
+REVIEW_STATUS = 'N'
+WHERE REVIEW_NO = ?
+</entry>
+
+<!-- 리뷰 신고  -->
+<entry key="insertReport">
+INSERT INTO REVIEW_REPORT
+VALUES(SEQ_RRNO.NEXTVAL, ?, ?, DEFAULT, ?, ?, ?)
+</entry>
+
+</properties>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<entry key="getListCount">
+SELECT COUNT(*) FROM V_BOARD
+WHERE BOARD_FL = 'N' AND BOARD_NO = ?
+</entry>
+
+<entry key="selectBoardList">
+SELECT * FROM 
+    (SELECT ROWNUM RNUM, V.*
+    FROM(SELECT * FROM V_BOARD
+            WHERE BOARD_FL = 'N' AND BOARD_NO = ?
+            ORDER BY DOCUMENT_NO DESC) V)
+WHERE RNUM BETWEEN ? AND ?
+</entry>
+
+<entry key="selectBoard">
+SELECT * FROM (SELECT ROWNUM RNUM, V.*
+							FROM(SELECT * FROM V_BOARD
+			        WHERE BOARD_FL = 'N' AND BOARD_NO = ?
+			        ORDER BY DOCUMENT_NO DESC) V)
+WHERE DOCUMENT_NO = ?
+</entry>
+
+<entry key="increaseReadCount">
+UPDATE BOARD SET READ_COUNT = READ_COUNT+1
+WHERE DOCUMENT_NO = ?
+</entry>
+
+<entry key="insertBoard">
+INSERT INTO BOARD VALUES(?, ?, ?, SYSDATE, 0, DEFAULT, ?, ?, ?)
+</entry>
+
+<entry key="selectDocumentNo">
+SELECT SEQ_BNO.NEXTVAL FROM DUAL
+</entry>
+
+<entry key="deleteBoard">
+UPDATE BOARD SET BOARD_FL = 'Y' WHERE DOCUMENT_NO = ?
+</entry>
+
+<entry key="deleteReply">
+UPDATE "COMMENT" SET COMMENT_FL = 'Y' WHERE DOCUMENT_NO = ?
+</entry>
+
+<entry key="updateBoard">
+UPDATE BOARD SET BOARD_TITLE = ?, BOARD_CONTENT = ?, CTGR_CD = ?
+WHERE DOCUMENT_NO = ?
+</entry>
+
+<entry key="changeDocument">
+SELECT 다음글번호, 이전글번호 FROM (SELECT ROWNUM RNUM, V.DOCUMENT_NO, LAG(DOCUMENT_NO) OVER (ORDER BY  DOCUMENT_NO DESC) 다음글번호 , LEAD(DOCUMENT_NO) OVER (ORDER BY  DOCUMENT_NO DESC) 이전글번호
+							FROM(SELECT * FROM V_BOARD
+			        WHERE BOARD_FL = 'N' AND BOARD_NO = ?
+			        ORDER BY DOCUMENT_NO DESC) V)
+WHERE DOCUMENT_NO = ?
+</entry>
+
+<entry key="reportBoard">
+INSERT INTO BOARD_REPORT VALUES(SEQ_BRNO.NEXTVAL, ?, DEFAULT, ?, ?, ?)
+</entry>
+
+<entry key="myBoard">
+SELECT * FROM V_BOARD WHERE MEMBER_NO = ? AND BOARD_FL = 'N' AND BOARD_NO = 1 ORDER BY BOARD_DT
+</entry>
+
+<entry key="myReply">
+SELECT * FROM "COMMENT" WHERE MEMBER_NO = ? AND COMMENT_FL = 'N' ORDER BY COMMENT_DT
+</entry>
+</properties>

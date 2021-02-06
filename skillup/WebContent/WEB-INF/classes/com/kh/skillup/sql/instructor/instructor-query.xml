@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- 전문가 등록 저장 -->
+	<entry key="insertSaveInstructor">
+	INSERT INTO ENROLLMENT (INSTR, INTRODUCTION, CAREER, CTGR_CD, INSTR_NAME, PERMIT_FL, SAVE_FL, ENROLLMENT_NO)
+	VALUES (?, ?, ?, ?, ?, DEFAULT, 'Y', SEQ_ENO.NEXTVAL)
+	</entry>
+	
+	<!-- 전문가 신청 저장 여부 확인 -->
+	<entry key="checkInstr">
+	SELECT COUNT(*)
+	FROM ENROLLMENT
+	WHERE SAVE_FL = 'Y'
+	AND INSTR = ?
+	</entry>
+	
+	<!-- 전문가 신청 저장 -> 신청 -->
+	<entry key="updateEnrollment">
+	UPDATE ENROLLMENT
+	SET INTRODUCTION = ?,
+    CAREER = ?,
+    CTGR_CD = ?
+	WHERE INSTR = ?
+	</entry>
+	
+	<!-- 전문가 등록 -->
+	<entry key="insertInstructor">
+		INSERT INTO ENROLLMENT (INSTR, INTRODUCTION, CAREER, CTGR_CD, INSTR_NAME, PERMIT_FL, SAVE_FL, ENROLLMENT_NO)
+		VALUES (?, ?, ?, ?, ?, DEFAULT, DEFAULT, SEQ_ENO.NEXTVAL)
+	</entry>
+	
+	<!-- 프로필사진 저장 -->
+	<entry key="insertAttachment">
+		INSERT INTO ENROLLMENT_FILE VALUES(SEQ_IFILE_NO.NEXTVAL, ?, ?, ?, ?)
+	</entry>
+	
+	<!-- 프로필사진 수정 -->
+	<entry key="updateAttachment">
+		UPDATE ENROLLMENT_FILE
+		SET FILE_PATH = ?,
+		    FILE_NAME = ?
+		WHERE FILE_NO = ?
+	</entry>
+	
+	<!-- 전문가 정보 조회 -->
+	<entry key="selectInstructor">
+		SELECT INSTR, INTRODUCTION, CAREER, CTGR_CD, PERMIT_FL, INSTR_NAME
+		FROM ENROLLMENT
+		WHERE INSTR = ?
+	</entry>
+	
+	<!-- 전문가 프로필 사진 조회 -->
+	<entry key="selectInstrFiles">
+		SELECT FILE_NO, FILE_NAME, FILE_LEVEL, FILE_PATH
+		FROM ENROLLMENT_FILE
+		WHERE INSTR = ?
+	</entry>
+	
+	<!-- 전문가 마이페이지 수정 -->
+	<entry key="updateInstructor">
+		UPDATE ENROLLMENT 
+		SET INTRODUCTION = ?,
+		    CAREER = ?,
+		    CTGR_CD = ?
+		WHERE INSTR = ?
+	</entry>
+	
+	<!-- 지정된 페이지 전문가 승인 신청 목록 조회 -->
+	<entry key="selectInstrList">
+		SELECT * FROM
+		(SELECT ROWNUM RNUM, V.*
+		 FROM
+		    (SELECT * FROM ENROLLMENT 
+		    ORDER BY ENROLLMENT_NO DESC) V)
+		WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- 전문가 승인 신청 수 조회 -->
+	<entry key="getListCount">
+	SELECT COUNT(*) FROM ENROLLMENT
+	</entry>
+	
+	<!-- 전문가 카테고리 이름 조회 -->
+	<entry key="selectCtgrNm">
+	SELECT CTGR_NM
+	FROM LESSON_CTGR
+	WHERE CTGR_CD = ?
+	</entry>
+	
+	<!-- 전문가 승인에 의한 회원 등급 수정 -->
+	<entry key="updateMemberGrade">
+	UPDATE MEMBER SET
+	MEMBER_GRADE = 'I'
+	WHERE MEMBER_NO = ?
+	</entry>
+	
+	<!-- 전문가 승인에 의한 승인 여부 변경 -->
+	<entry key="updatePermitFl">
+	UPDATE ENROLLMENT SET
+	PERMIT_FL = 'Y'
+	WHERE INSTR = ?
+	</entry>	
+	
+	<!-- 진행 중인 수업 페이징 처리를 위한 값 계산 -->
+	<entry key="getLessonListCount">
+	SELECT COUNT(*)
+	FROM LESSON
+	WHERE INSTR = ?
+	AND LESSON_AVA = 'Y'
+	</entry>
+	
+	<!-- 진행 중인 수업 조회 -->
+	<entry key="selectLessonList">
+		SELECT * FROM 
+		    (SELECT ROWNUM RNUM, V.*
+		    FROM (
+		        SELECT * FROM V_LESSON
+		        WHERE LESSON_FL = 'N' AND LESSON_AVA = 'Y' AND INSTR = ?
+		        ORDER BY LESSON_NO DESC) V)
+		WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<!-- 진행 중인 수업 썸네일 조회 -->
+	<entry key="selectThumbnailList">
+		SELECT *
+		FROM LESSON_FILE 
+		WHERE (FILE_LEVEL, LESSON_NO) IN
+			(SELECT MIN(FILE_LEVEL), LESSON_NO
+			FROM LESSON_FILE 
+			WHERE LESSON_NO IN (
+			    SELECT LESSON_NO FROM 
+			        (SELECT ROWNUM RNUM, V.* FROM 
+			            (SELECT LESSON_NO  FROM V_LESSON 
+			            WHERE LESSON_FL = 'N' AND LESSON_AVA = 'Y' AND INSTR = ?
+			                        ORDER BY LESSON_NO DESC ) V) 
+			    WHERE RNUM BETWEEN ? AND ?)
+		AND FILE_FL = 'N'
+		GROUP BY LESSON_NO)
+	</entry>
+	
+</properties>

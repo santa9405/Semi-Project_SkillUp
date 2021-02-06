@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<entry key="selectList">
+SELECT COMMENT_NO, "COMMENT", COMMENT_DT, MEMBER_NAME
+FROM V_COMMENT
+WHERE COMMENT_FL = 'N'
+AND DOCUMENT_NO = ?
+</entry>
+
+<entry key="insertReply">
+INSERT INTO "COMMENT" VALUES(SEQ_RNO.NEXTVAL, ?, DEFAULT, DEFAULT, ?, ?)
+</entry>
+
+<entry key="updateReply">
+UPDATE "COMMENT" SET
+"COMMENT" = ?
+WHERE COMMENT_NO = ?
+</entry>
+
+<entry key="updateReplyStatus">
+UPDATE "COMMENT" SET
+COMMENT_FL= 'Y'
+WHERE COMMENT_NO = ?
+</entry>
+</properties>

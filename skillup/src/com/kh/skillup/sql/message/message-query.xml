@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<entry key="sendListCount">
+SELECT COUNT(*) FROM MESSAGE
+WHERE SEND_MEMBER = ?
+</entry>
+
+<entry key="receiveListCount">
+SELECT COUNT(*) FROM MESSAGE
+WHERE SEND_MEMBER = ?
+</entry>
+
+<entry key="receiveMessageList">
+SELECT * FROM 
+    (SELECT ROWNUM RNUM, V.*
+    FROM(SELECT * FROM V_RMESSAGE
+            WHERE REC_MEMBER = ? AND RECEIVE_MSG_FL = 'N'
+            ORDER BY MESSAGE_NO DESC) V)
+WHERE RNUM BETWEEN ? AND ?
+</entry>
+
+<entry key="sendMessageList">
+SELECT * FROM 
+    (SELECT ROWNUM RNUM, V.*
+    FROM(SELECT * FROM V_SMESSAGE
+            WHERE SEND_MEMBER = ? AND SEND_MSG_FL = 'N'
+            ORDER BY MESSAGE_NO DESC) V)
+WHERE RNUM BETWEEN ? AND ?
+</entry>
+
+<entry key="selectMemberName">
+SELECT MEMBER_NAME FROM MEMBER
+WHERE MEMBER_NO = ?
+</entry>
+
+<entry key="selectReceiveMessage">
+SELECT MESSAGE_CONTENT, MEMBER_NAME, REC_DT
+FROM V_RMESSAGE
+WHERE MESSAGE_NO = ?
+</entry>
+
+<entry key="selectSendMessage">
+SELECT MESSAGE_CONTENT, MEMBER_NAME, REC_DT
+FROM V_SMESSAGE
+WHERE MESSAGE_NO = ?
+</entry>
+
+<entry key="selectMember">
+SELECT * FROM MEMBER
+WHERE MEMBER_EMAIL = ?
+</entry>
+
+<entry key="insertMessage">
+INSERT INTO MESSAGE VALUES(SEQ_MSG_NO.NEXTVAL, ?, DEFAULT, DEFAULT, DEFAULT, ?, ?, DEFAULT)
+</entry>
+</properties>

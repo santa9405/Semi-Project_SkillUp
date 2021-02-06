@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	
+	<entry key="emailDupCheck">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE MEMBER_EMAIL = ? AND MEMBER_STATUS = 'Y'
+	</entry>
+	
+	<entry key="signUp">
+		INSERT INTO MEMBER
+		VALUES (SEQ_MNO.NEXTVAL, ?, ?, ?, ?, ?, DEFAULT, DEFAULT)
+	</entry>
+
+	<entry key="login">
+		SELECT MEMBER_NO, MEMBER_EMAIL, MEMBER_NAME, PHONE, INTEREST, MEMBER_GRADE
+		FROM MEMBER
+		WHERE MEMBER_EMAIL = ? AND PASSWORD = ? AND MEMBER_STATUS = 'Y'
+	</entry>
+	
+	<entry key="updateMember">
+		UPDATE MEMBER
+		SET PHONE = ?, INTEREST= ?
+		WHERE MEMBER_NO = ?
+	</entry>
+	
+	<entry key="checkCurrentPwd">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE MEMBER_NO = ? AND PASSWORD = ?
+	</entry>
+	
+	<entry key="updatePwd">
+		UPDATE MEMBER
+		SET PASSWORD = ?
+		WHERE MEMBER_NO = ?
+	</entry>
+	
+	<entry key="updateStatus">
+		UPDATE MEMBER
+		SET MEMBER_STATUS = 'N'
+		WHERE MEMBER_NO = ?
+	</entry>
+	
+	<entry key="findPwd">
+		UPDATE MEMBER
+		SET PASSWORD = ?
+		WHERE MEMBER_EMAIL = ?
+	</entry>
+</properties>

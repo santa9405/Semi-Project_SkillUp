@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="getListCount">
+		SELECT COUNT(*)
+		FROM V_LESSON
+		WHERE LESSON_FL = 'N' AND LESSON_AVA = 'Y'
+	</entry>
+	
+	<entry key="selectLessonList">
+		SELECT * FROM 
+		    (SELECT ROWNUM RNUM, V.*
+		    FROM (
+		        SELECT * FROM V_LESSON
+		        WHERE LESSON_FL = 'N' AND LESSON_AVA = 'Y'
+		        ORDER BY LESSON_NO DESC) V)
+		WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectMyLessonList">
+		SELECT * FROM 
+		    (SELECT ROWNUM RNUM, V.*
+		    FROM (
+		        SELECT * FROM V_LESSON
+		        WHERE LESSON_FL = 'N' AND INSTR = ?
+		        ORDER BY LESSON_NO DESC) V)
+		WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectMyThumbnailList">
+		SELECT *
+		FROM LESSON_FILE 
+		WHERE (FILE_LEVEL, LESSON_NO) IN
+			(SELECT MIN(FILE_LEVEL), LESSON_NO
+			FROM LESSON_FILE 
+			WHERE LESSON_NO IN (
+			    SELECT LESSON_NO FROM 
+			        (SELECT ROWNUM RNUM, V.* FROM 
+			            (SELECT LESSON_NO  FROM V_LESSON 
+			            WHERE LESSON_FL = 'N' AND INSTR = ?
+			                        ORDER BY LESSON_NO DESC ) V) 
+			    WHERE RNUM BETWEEN ? AND ?)
+		AND FILE_FL = 'N'
+		GROUP BY LESSON_NO)
+	</entry>
+	
+	<entry key="selectLesson">
+		SELECT V_LESSON.* 
+		FROM V_LESSON
+		WHERE LESSON_NO = ?
+	</entry>
+	
+	<entry key="increseReadCnt">
+		UPDATE LESSON
+		SET READ_CNT = READ_CNT + 1
+		WHERE LESSON_NO = ?
+	</entry>
+	
+	<entry key="selectNextNo">
+		SELECT SEQ_BNO.NEXTVAL FROM DUAL
+	</entry>
+	
+	<entry key="insertLesson">
+		INSERT INTO LESSON (LESSON_NO, LESSON_TITLE, LESSON_CONTENT, PLACE, PRICE, MAX_NUM, LESSON_DT, LESSON_CNT, LESSON_TIME, LESSON_AVA, READ_CNT, LESSON_FL, LESSON_TYPE, INSTR, CTGR_CD)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, DEFAULT, DEFAULT, DEFAULT, ?, ?, ?)
+	</entry>
+	
+	<entry key="insertAttachment">
+		INSERT INTO LESSON_FILE VALUES(SEQ_FNO.NEXTVAL, ?, ?, ?, ?, DEFAULT)
+	</entry>
+	
+	<entry key="selectLessonFiles">
+		SELECT FILE_NO, FILE_NAME, FILE_LEVEL, FILE_PATH
+		FROM LESSON_FILE 
+		WHERE LESSON_NO = ? AND FILE_FL = 'N'
+		ORDER BY FILE_LEVEL, FILE_NO
+	</entry>
+	
+	<entry key="selectThumbnailList">
+		SELECT *
+		FROM LESSON_FILE 
+		WHERE (FILE_LEVEL, LESSON_NO) IN
+			(SELECT MIN(FILE_LEVEL), LESSON_NO
+			FROM LESSON_FILE 
+			WHERE LESSON_NO IN (
+			    SELECT LESSON_NO FROM 
+			        (SELECT ROWNUM RNUM, V.* FROM 
+			            (SELECT LESSON_NO  FROM V_LESSON 
+			            WHERE LESSON_FL = 'N' AND LESSON_AVA = 'Y' 
+			                        ORDER BY LESSON_NO DESC ) V) 
+			    WHERE RNUM BETWEEN ? AND ?)
+		AND FILE_FL = 'N'
+		GROUP BY LESSON_NO)
+	</entry>
+	
+	<entry key="updateLesson">
+		UPDATE LESSON 
+		SET LESSON_TITLE = ?,
+		    LESSON_CONTENT = ?,
+		    PLACE = ?, 
+		    PRICE = ?, 
+		    MAX_NUM = ?, 
+		    LESSON_DT = ?, 
+		    LESSON_CNT = ?, 
+		    LESSON_TIME = ?,
+		    LESSON_TYPE = ?,
+		    CTGR_CD = ?
+		WHERE LESSON_NO = ?
+	</entry>
+	
+	<entry key="updateAttachment">
+		UPDATE LESSON_FILE
+		SET FILE_PATH = ?,
+		    FILE_NAME = ?,
+		    FILE_LEVEL = ?
+		WHERE FILE_NO = ?
+	</entry>
+	
+	<entry key="updateLessonFL">
+		UPDATE LESSON
+		SET LESSON_FL = 'Y'
+		WHERE LESSON_NO = ?
+	</entry>
+	
+	<entry key="updateStatus">
+		UPDATE LESSON
+		SET LESSON_AVA = 'N'
+		WHERE LESSON_NO = ?
+	</entry>
+	
+	<entry key="deleteAttachment">
+		UPDATE LESSON_FILE
+		SET FILE_FL = 'Y'
+		WHERE FILE_NO = ?
+	</entry>
+	
+	<entry key="selectLikesLesson">
+		SELECT * FROM 
+		    (SELECT ROWNUM RNUM, V.*
+		    FROM (
+		        SELECT * FROM V_LESSON
+		        WHERE LESSON_FL = 'N'
+							AND LESSON_NO IN (
+                        SELECT LESSON_NO FROM LIKES WHERE MEMBER_NO = ?)
+		        ORDER BY LESSON_NO DESC) V)
+		WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectLikesThumbnailList">
+		SELECT *
+		FROM LESSON_FILE 
+		WHERE (FILE_LEVEL, LESSON_NO) IN
+			(SELECT MIN(FILE_LEVEL), LESSON_NO
+			FROM LESSON_FILE 
+			WHERE LESSON_NO IN (
+			    SELECT LESSON_NO FROM 
+			        (SELECT ROWNUM RNUM, V.* FROM 
+			            (SELECT LESSON_NO  FROM V_LESSON 
+			            WHERE LESSON_FL = 'N' 
+			            	AND LESSON_NO IN (
+                        SELECT LESSON_NO FROM LIKES WHERE MEMBER_NO = ?)
+			                        ORDER BY LESSON_NO DESC ) V) 
+			    WHERE RNUM BETWEEN ? AND ?)
+		AND FILE_FL = 'N'
+		GROUP BY LESSON_NO)
+	</entry>
+	
+	<entry key="selectSubjectCnt">
+		SELECT COUNT(*) FROM SUBJECT WHERE LESSON_NO = ?
+	</entry>
+	
+	<entry key="getMyListCount">
+		SELECT COUNT(*) FROM V_LESSON
+    WHERE LESSON_FL = 'N' AND INSTR = ?
+	</entry>
+	
+	<entry key="getLikesListCount">
+		SELECT COUNT(*) FROM V_LESSON
+    WHERE LESSON_FL = 'N'
+			AND LESSON_NO IN (
+				SELECT LESSON_NO FROM LIKES WHERE MEMBER_NO = ?)
+	</entry>
+</properties>
