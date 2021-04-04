@@ -104,13 +104,13 @@
 					<!-- 파일 업로드 하는 부분 -->
 					<c:choose>
 						<c:when test="${!empty fList}">
-								<input type="file" id="file0" name="file0" onchange="LoadImg(this,0)" accept=".gif, .jpg, .png"> 
+								<input type="file" id="file0" name="file0" onchange="LoadImg(this,0)" accept=".jpg, .png"> 
 							<div id="fileArea">
 							</div>
 						</c:when>
 						
 						<c:otherwise>
-								<input type="file" id="file0" name="file0" onchange="LoadImg(this,0)" accept=".gif, .jpg, .png" required> 
+								<input type="file" id="file0" name="file0" onchange="LoadImg(this,0)" accept=".jpg, .png" required> 
 						</c:otherwise>
 					</c:choose>
 	                     </div>

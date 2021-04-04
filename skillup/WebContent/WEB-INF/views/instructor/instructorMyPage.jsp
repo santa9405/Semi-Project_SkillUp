@@ -60,7 +60,7 @@
             
          <div class="col-sm-12">
             <div class="container p-3">
-               <form method="POST" action="updateMyPage.do" enctype="multipart/form-data" onsubmit="return instructorUpdateValidate();" class="form-horizontal" role="form">
+               <form method="POST" action="updateMyPage.do" enctype="multipart/form-data" class="form-horizontal" role="form">
                   
                   
                   
